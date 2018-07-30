@@ -1,13 +1,13 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-    name: kube-state-metrics
+  name: kube-state-metrics 
 spec:
   replicas: 2
   template:
     metadata:
       labels:
-        app: kube-state-metrics
+          app: kube-state-metrics
     spec:
       serviceAccountName: kube-state-metrics
       containers:

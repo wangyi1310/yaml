@@ -9,13 +9,8 @@ metadata:
         {
             "name": "init-myservice",
             "image": "busybox",
-            "command": ["sh", "-c", "echo helloworld >> /data/1.txt"],
-            "volumeMounts": [{ "name": "nginx-test", "mountPath": "/data/"}] 
-        },
-        {
-            "name": "init-mydb",
-            "image": "busybox",
-            "command": ["sh", "-c", "until nslookup mydb; do echo waiting for mydb; sleep 2; done;"]
+            "command": ["sh", "-c", "mkdir /var/log/$(hostname)"],
+            "volumeMounts": [{ "name": "init-path", "mountPath": "/var/log"}] 
         }
     ]'
 spec:
@@ -24,10 +19,15 @@ spec:
     image: busybox
     command: ['sh', '-c', 'echo The app is running! && sleep 3600']
     volumeMounts: 
-    - mountPath: /data/
-      name: nginx-test
+    - mountPath: /var/log/
+      name: container-log
+    - mountPath: /etc/podinfo
+      name: podinfo
   volumes:
-  - name: nginx-test
-    hostPath: 
-      path: /data/c
+    - name: init-path
+      hostPath:
+        path: /var/log
+    - name: container-log
+      hostPath: 
+        path: /var/log/myapp/
 

@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: prometheus-deployment
+  name: prometheus
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      hostNetwork: true
+      containers:
+      - image: prom/prometheus:v1.0.1
+        name: prometheus
+        command:
+        - "/bin/prometheus"
+        args:
+        - "-config.file=/etc/prometheus/prometheus.yml"
+        - "-storage.local.path=/prometheus"
+        - "-storage.local.retention=24h"
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        volumeMounts:
+        - mountPath: "/prometheus"
+          name: data
+          subPath: prometheus
+        - mountPath: "/etc/prometheus"
+          name: config-volume
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 1Gi
+      volumes:
+      - name: data
+        emptyDir: {}
+      - configMap:
+          name: prometheus-config
+        name: config-volume
+  
