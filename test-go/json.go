@@ -39,4 +39,3 @@ func main() {
 		fmt.Println(err)
 	}
 	fmt.Println(p1.Name)
-}
