@@ -15,16 +15,28 @@ func main() {
 	var n string
 	fmt.Println("please input sting")
 	fmt.Scanf("%s", &n)
-	//cmd := fmt.Sprintf("select * from jiqi where name like '%%%s%%'", n)
-
-	//rows, err := db.Query(cmd)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	var cmd string
+	//cmd = fmt.Sprintf("select * from jiqi where name like '%%%s%%'", n)
+	cmd = fmt.Sprintf("select * from jiqi where name like %s", n)
+	fmt.Printf("%s", cmd)
+	rows, _ := db.Query(cmd)
+	//rows, err := db.Query("select * from jiqi where name like '%%%?%%'", n)
 	name := ""
 	for rows.Next() {
-		rows.Scan(&name)
+		erri := rows.Scan(&name)
+		if erri != nil {
+			fmt.Println("dsafdsf")
+		}
 		fmt.Println(name)
 	}
+	//fmt.Println(name)
+	//var b int = 10
+	//var c int = 12
+	//var m = make(map[string]int)
+	//m["1"] = b
+	//m["2"] = c
+	if err := rows.Err(); err != nil {
+		fmt.Println(err)
+	}
+
 }
