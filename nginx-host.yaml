@@ -14,6 +14,15 @@ spec:
         image: nginx
         ports:
         - containerPort: 80
+        env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: MY_lABEL
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
         volumeMounts:
         - mountPath: /usr/share/nginx/html/
           name: nginx-test
