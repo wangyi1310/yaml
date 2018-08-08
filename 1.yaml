@@ -4,39 +4,36 @@ metadata:
   name: myapp-pod
   labels:
     app: myapp
-  annotations:
-    pod.beta.kubernetes.io/init-containers: '[
-        {
-            "name": "init-myservice",
-            "image": "busybox",
-            "command": ["sh", "-c", "mkdir /var/log/$(POD_NAME)"],
-            "volumeMounts": [{ "name": "init-path", "mountPath": "/var/log"}] 
-        }
-    ]'
 spec:
   replicas: 1
   template:
     metadata:
       labels:
         name: myapp
+      annotations:
+        pod.beta.kubernetes.io/init-containers: '[
+            {
+                "name": "init-myservice",
+                "image": "busybox",
+                "imagePullPolicy": "IfNotPresent",
+                "command": ["sh", "-c", "mkdir /var/test"],
+                "volumeMounts": [{ "name": "used-by-container", "mountPath": "/var"}]
+            }
+         ]'
     spec:
       containers:
       - name: myapp-container
         image: busybox
         command: ['sh', '-c', 'echo The app is running! && sleep 3600']
-        volumeMounts: 
-        - mountPath: /var/log/
-          name: container-log
         env:
-          - name: POD_NAME
+          - name: MY_POD_IP
             valueFrom:
               fieldRef:
-                fieldPath: metadata.name
+                fieldPath: status.podIP
+        volumeMounts: 
+        - mountPath: /var/log
+          name: used-by-container 
       volumes:
-      - name: init-path
+      - name: used-by-container
         hostPath:
-          path: /var/log
-      - name: container-log
-        hostPath: 
-        path: /var/log/myapp-pod/
-
+          path: /var/log/myapp-pod/myapp-container
