@@ -23,8 +23,11 @@ spec:
     spec:
       containers:
       - name: myapp-container
-        image: busybox
-        command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+        image: nginx
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "echo helloworld"]
         env:
           - name: MY_POD_IP
             valueFrom:

@@ -8,19 +8,6 @@ spec:
     metadata:
       labels:
         name: nginx
-      annotations:
-        pod.beta.kubernetes.io/init-containers: '[
-            {
-                "name": "init-myservice",
-                "image": "busybox",
-                "imagePullPolicy": "IfNotPresent",
-                "command": ["sh", "-c", "touch /var/message\n
-                                         touch /var/secure\n
-                                         touch /var/btmp
-                             "],
-                "volumeMounts": [{ "name": "nginx-test", "mountPath": "/var"}]
-            }
-        ]'
     spec:
       containers:
       - name: nginx-container
@@ -33,9 +20,7 @@ spec:
               command: ["/bin/sh", "-c", "
                 echo $PODIP > /data/$PODIP\n
                 ln -s /data/message /var/log/message\n
-                ln -s /data/secure  /var/log/secure\n
-                rm /var/log/btmp\n
-                ln -s /data/btmp    /var/log/btmp
+                ln -s /data/secure  /var/log/secure
                 "]
         env:
           - name: PODIP
