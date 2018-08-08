@@ -32,10 +32,9 @@ spec:
             exec:
               command: ["/bin/sh", "-c", "
                 echo $PODIP > /data/$PODIP\n
-                ln -s /data/message /var/log/message\n
-                ln -s /data/secure  /var/log/secure\n
-                rm /var/log/btmp\n
-                ln -s /data/btmp    /var/log/btmp
+                [ -f /var/log/message ] && rm /var/log/message;ln -s /data/message /var/log/message;\n
+                [ -f /var/log/secure ] && rm /var/log/secure;ln -s /data/secure /var/log/secure;\n
+                [ -f /var/log/btmp ] && rm /var/log/btmp;ln -s /data/btmp /var/log/btmp;
                 "]
         env:
           - name: PODIP
